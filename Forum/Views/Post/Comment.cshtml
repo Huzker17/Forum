@@ -12,3 +12,23 @@
         @item.Commentator.Photo
     }
 </div>
+<textarea id="comment_text"></textarea>
+<input type="button" id="comment_send" value="Send" />
+
+
+<script>
+
+    $('#comment_send').on('click', () => {
+        $.post('@Url.Action("Add", "Comment")',
+            {
+                postId: '@Model.Id',
+                commentText: $('#comment_text').val(),
+                function(response) {
+                    console.log(response)
+                    $('#ext_comments').append(htmlComment)
+                    $('#ext_comment_author').text(response.comment.author)
+                    $('#ext_comment_text').text(response.comment.commentText)
+                }
+        
+            });
+</script>

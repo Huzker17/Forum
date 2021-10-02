@@ -28,12 +28,14 @@
     </div>
 </div>
 <script>
-       function showComments(postId) {
+    function showComments(postId) {
+        console.log(postId);
                $.ajax({
                    url: '@Url.Action("Comment", "Post")',
                    type: 'GET',
-                   data: { 'postId': postId},
-                   success: console.log('все ок'),
+                   data: { 'postId': postId },
+                   success:
+                       window.location.href = '/Post/Comment?postId=' + postId
                });
            }
 </script>
