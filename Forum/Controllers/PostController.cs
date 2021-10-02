@@ -1,4 +1,5 @@
 ﻿using Forum.Models;
+using Forum.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,14 +25,13 @@ namespace Forum.Controllers
         {
             return await _userManager.GetUserAsync(HttpContext.User);
         }
-        public IActionResult Index()
+        public IActionResult Index(int page = 1)
         {
             var posts = _db.Posts.Include(p => p.Author).Include(c => c.Comments).OrderByDescending(x => x.CreationTime).ToList();
             return View(posts);
         }
         public IActionResult Comment(int? postId)
         {
-
                 var post = _db.Posts.Include(p => p.Author).FirstOrDefault(p => p.Id == postId);
                 post.Comments = _db.Comments.Include(p => p.Commentator).Where(c => c.PostId == postId).OrderBy(x => x.PostedTime).ToList();
                 return View(post);
@@ -55,6 +55,11 @@ namespace Forum.Controllers
                 _db.SaveChanges();
             }
             return RedirectToAction("Index");
+        }
+        public JsonResult Pagination()
+        {
+            var posts = _db.Posts.ToList();
+            return Json(new { posts});
         }
     }
     }

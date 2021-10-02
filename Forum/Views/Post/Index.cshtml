@@ -9,16 +9,20 @@
         {
             @foreach (var item in Model)
             {
-                <table width="80%">
+                <table width="80%" id="listining_table">
                     <tr class="btn-link" onclick="showComments('@item.Id')">
                         <td>@item.Name</td>
                         <td>@item.CreationTime</td>
                         <td>@item.Author.Login</td>
 
-                        <td>Ответов: @if (@item.Comments != null) {
-                            @item.Comments.Count}
-                            else { 
-                            <span>0</span>}</td>
+                        <td>
+                            Ответов: @if (@item.Comments != null)
+                            {
+                                @item.Comments.Count}
+                            else
+                            {
+                                <span>0</span>}
+                        </td>
                     </tr>
                 </table>
             }
@@ -26,10 +30,13 @@
         }
         else
         {
-        <p>Пока нет публикаций</p>
+            <p>Пока нет публикаций</p>
         }
     </div>
 </div>
+<ol id="pagin">
+ 
+</ol>
 
 <script>
     function showComments(postId) {
@@ -42,4 +49,36 @@
                        window.location.href = '/Post/Comment?postId=' + postId
                });
     }
+
+    pageSize = 2;
+    let arr = @Model.Count
+    showPage = function (page) {
+        $(".btn-link").hide();
+        $(".btn-link").each(function (n) {
+            if (n >= pageSize * (page - 1) && n < pageSize * page)
+                $(this).show();
+        });
+        }
+    $('document').ready(function () {
+        for (let i = 2; i <= arr; i++) {
+            if (i == 2) {
+                $("#pagin").append("<li><a href='#' class='current'>1</a></li>");
+
+                if (i % 2 == 0) {
+                    $("#pagin").append("<li><a href='#'>2</a></li>");
+                }
+            }
+        }
+    });
+    setInterval(myCallback, 5000);
+    showPage(1);
+    function myCallback(){
+        $("#pagin li a").click(function () {
+            $("#pagin li a").removeClass("current");
+            $(this).addClass("current");
+            showPage(parseInt($(this).text()))
+        })
+    };
+
+
 </script>
