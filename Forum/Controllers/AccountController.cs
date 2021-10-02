@@ -1,14 +1,11 @@
 ﻿using Forum.Models;
 using Forum.ViewModels;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Hosting;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Forum.Controllers
 {
@@ -80,8 +77,8 @@ namespace Forum.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    User user = await _userManager.FindByEmailAsync(model.Email);
-                    var result = await _signInManager.PasswordSignInAsync(
+                User user = await _userManager.FindByEmailAsync(model.Email);
+                var result = await _signInManager.PasswordSignInAsync(
                         user,
                         model.Password,
                         model.RememberMe,

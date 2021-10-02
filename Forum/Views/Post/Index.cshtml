@@ -15,7 +15,10 @@
                         <td>@item.CreationTime</td>
                         <td>@item.Author.Login</td>
 
-                        <td>Ответов: @(@item.Comments !=null?@item.Comments.Count:0)</td>
+                        <td>Ответов: @if (@item.Comments != null) {
+                            @item.Comments.Count}
+                            else { 
+                            <span>0</span>}</td>
                     </tr>
                 </table>
             }
@@ -27,6 +30,7 @@
         }
     </div>
 </div>
+
 <script>
     function showComments(postId) {
         console.log(postId);
@@ -37,5 +41,5 @@
                    success:
                        window.location.href = '/Post/Comment?postId=' + postId
                });
-           }
+    }
 </script>

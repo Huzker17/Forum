@@ -26,21 +26,15 @@ namespace Forum.Controllers
         }
         public IActionResult Index()
         {
-            var posts = _db.Posts.Include(p => p.Author).OrderBy(x => x.CreationTime).ToList();
+            var posts = _db.Posts.Include(p => p.Author).Include(c => c.Comments).OrderByDescending(x => x.CreationTime).ToList();
             return View(posts);
         }
         public IActionResult Comment(int? postId)
         {
-            //if (postId != null)
-            //{
+
                 var post = _db.Posts.Include(p => p.Author).FirstOrDefault(p => p.Id == postId);
-                post.Comments = _db.Comments.Include(p => p.Commentator).Where(c => c.PostId == postId).ToList();
+                post.Comments = _db.Comments.Include(p => p.Commentator).Where(c => c.PostId == postId).OrderBy(x => x.PostedTime).ToList();
                 return View(post);
-            //}
-            //else
-            //{
-            //    return RedirectToAction("Index");
-            //}
         }
         
         

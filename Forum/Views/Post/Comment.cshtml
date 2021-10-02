@@ -4,31 +4,71 @@
 
 <div class="container">
     <span>@Model.Name</span> <span>@Model.CreationTime</span> <span>@Model.Author</span>
+    <button id="myBtn">Open Modal</button>
+
     @foreach (var item in Model.Comments)
     {
-        @item.Commentator
-        @item.PostedTime
-        @item.Text
-        @item.Commentator.Photo
+        <div class="message-box">
+            <img src="@item.Commentator.Photo" alt="Avatar">
+            <p>@item.Text</p>
+            <span class="time-right">@item.PostedTime</span>
+        </div>
     }
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <textarea id="comment_text"></textarea>
+            <input type="button" id="comment_send" value="Send" class="btn" />
+        </div>
+
+    </div>
 </div>
-<textarea id="comment_text"></textarea>
-<input type="button" id="comment_send" value="Send" />
+
 
 
 <script>
+    let htmlComment = '<div class="card" style="width: 18rem;">' +
+        '<div class="card-body">' + '<h5 id="ext_comment_author" class="card-title"></h5>' +
+        '<hr>' +
+        '<p id="ext_comment_text" class="card-text"></p>' +
+        '</div></div>'
 
-    $('#comment_send').on('click', () => {
-        $.post('@Url.Action("Add", "Comment")',
+
+$('#comment_send').on('click', () => {
+        $.post('@Url.Action("Add", "Comments")',
             {
                 postId: '@Model.Id',
                 commentText: $('#comment_text').val(),
-                function(response) {
-                    console.log(response)
-                    $('#ext_comments').append(htmlComment)
-                    $('#ext_comment_author').text(response.comment.author)
-                    $('#ext_comment_text').text(response.comment.commentText)
-                }
-        
-            });
+            },
+            function (response) {
+                console.log(response)
+                $('#ext_comments').append(htmlComment)
+                $('#ext_comment_author').text(response.comment.Commentator)
+                $('#ext_comment_text').text(response.comment.Text)
+            }
+        )
+});
+    var modal = document.getElementById("myModal");
+
+    var btn = document.getElementById("myBtn");
+
+    var span = document.getElementsByClassName("close")[0];
+
+    btn.onclick = function () {
+        modal.style.display = "block";
+    }
+
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
 </script>

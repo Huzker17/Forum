@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace Forum.Controllers
 {
-    public class CommentController : Controller
+    public class CommentsController : Controller
     {
         private readonly UserManager<User> _userManager;
         private ApplicationDbContext _db;
 
-        public CommentController(UserManager<User> userManager, ApplicationDbContext db)
+        public CommentsController(UserManager<User> userManager, ApplicationDbContext db)
         {
             _userManager = userManager;
             _db = db;
@@ -26,13 +26,12 @@ namespace Forum.Controllers
         [HttpPost]
         public async Task<JsonResult> Add(int postId, string commentText)
         {
-            var post = _db.Posts.FirstOrDefault(p => p.Id == postId);
             Comment comment = new Comment
             {
+                UserId = CurrentUser().Result.Id,
                 PostId = postId,
-                PostedTime = DateTime.Now,
                 Commentator = CurrentUser().Result,
-                Post = post,
+                PostedTime = DateTime.Now,
                 Text = commentText
             };
 
