@@ -1,0 +1,14 @@
+﻿@model Post
+@{ ViewBag.Title = "Лента";
+    Layout = "_Layout"; }
+
+<div class="container">
+    <span>@Model.Name</span> <span>@Model.CreationTime</span> <span>@Model.Author</span>
+    @foreach (var item in Model.Comments)
+    {
+        @item.Commentator
+        @item.PostedTime
+        @item.Text
+        @item.Commentator.Photo
+    }
+</div>

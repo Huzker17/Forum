@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,11 +29,17 @@ namespace Forum
         {
             services.AddControllersWithViews();
             string connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connection));
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
-            {
-                options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
-            });
+            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connection))
+                .AddIdentity<User, IdentityRole>(options =>
+                {
+                    options.Password.RequiredLength = 5;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireDigit = false;
+
+                })
+                .AddEntityFrameworkStores<ApplicationDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

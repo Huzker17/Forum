@@ -1,0 +1,13 @@
+﻿@model Post
+
+<h2>Добавление нового поста</h2>
+
+<form method="post" asp-controller="Post" asp-action="Add" enctype="multipart/form-data">
+    <div>
+        <label asp-for="Name"></label><br />
+        <input asp-for="Name" />
+    </div>
+    <div>
+        <input type="submit" value="Добавить публикацию" />
+    </div>
+</form>

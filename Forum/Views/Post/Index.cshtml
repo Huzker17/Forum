@@ -1,0 +1,39 @@
+﻿@model List<Post>
+@{ ViewBag.Title = "Лента";
+    Layout = "_Layout"; }
+<div>
+
+    <div class="container">
+        <h2 class="text-center">Темы</h2>
+        @if (Model != null)
+        {
+            @foreach (var item in Model)
+            {
+                <table width="80%">
+                    <tr class="btn-link" onclick="showComments('@item.Id')">
+                        <td>@item.Name</td>
+                        <td>@item.CreationTime</td>
+                        <td>@item.Author.Login</td>
+
+                        <td>Ответов: @(@item.Comments !=null?@item.Comments.Count:0)</td>
+                    </tr>
+                </table>
+            }
+
+        }
+        else
+        {
+        <p>Пока нет публикаций</p>
+        }
+    </div>
+</div>
+<script>
+       function showComments(postId) {
+               $.ajax({
+                   url: '@Url.Action("Comment", "Post")',
+                   type: 'GET',
+                   data: { 'postId': postId},
+                   success: console.log('все ок'),
+               });
+           }
+</script>

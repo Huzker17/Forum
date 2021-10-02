@@ -1,6 +1,7 @@
 ﻿using Forum.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,13 +26,28 @@ namespace Forum.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            var posts = _db.Posts.Include(p => p.Author).OrderBy(x => x.CreationTime).ToList();
+            return View(posts);
         }
-
+        public IActionResult Comment(int? postId)
+        {
+            //if (postId != null)
+            //{
+                var post = _db.Posts.Include(p => p.Author).FirstOrDefault(p => p.Id == postId);
+                post.Comments = _db.Comments.Include(p => p.Commentator).Where(c => c.PostId == postId).ToList();
+                return View(post);
+            //}
+            //else
+            //{
+            //    return RedirectToAction("Index");
+            //}
+        }
+        
         public IActionResult Add()
         {
             return View();
         }
+        [HttpPost]
         public IActionResult Add(Post p)
         {
             var user = CurrentUser().Result;
