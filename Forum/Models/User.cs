@@ -10,5 +10,6 @@ namespace Forum.Models
     {
         public string Photo { get; set; }
         public string Login { get; internal set; }
+        public ICollection<Post> Posts { get; set; }
     }
 }
